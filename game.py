@@ -183,6 +183,7 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
         if ids not in clicked:
             clicked.add(ids)
             marked.add(ids)
+            l2.config(text='Marked: ' + str(len(marked)))
             c.itemconfig(CURRENT, fill="orange")
             x1, y1, x2, y2 = c.coords(ids)
             if check_win():
@@ -191,6 +192,7 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
         else:
             clicked.remove(ids)
             marked.remove(ids)
+            l2.config(text='Marked: ' + str(len(marked)))
             c.itemconfig(CURRENT, fill="gray")
 
     c.bind("<Button-1>", click)
@@ -207,6 +209,10 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
     l1 = Label(root, text="Mines: " + str(len(mines)),
                font="Arial 16")
     l1.pack()
+
+    l2 = Label(root, text="Marked: " + str(len(marked)),
+               font="Arial 16")
+    l2.pack()
 
     root.mainloop()
 
