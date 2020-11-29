@@ -154,9 +154,12 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
                 root.destroy()
                 return 0
         if ids in mines:
-            c.itemconfig(CURRENT, fill="red")  # Если кликнули по клетке с миной - красим ее в красный цвет
-            gameover()
-            return 0
+            if ids in marked:
+                pass
+            else:
+                c.itemconfig(CURRENT, fill="red")  # Если кликнули по клетке с миной - красим ее в красный цвет
+                gameover()
+                return 0
 
         elif ids not in clicked:
             c.itemconfig(CURRENT, fill="green")  # Иначе красим в зеленый
@@ -187,6 +190,7 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
                 root.destroy()
         else:
             clicked.remove(ids)
+            marked.remove(ids)
             c.itemconfig(CURRENT, fill="gray")
 
     c.bind("<Button-1>", click)
@@ -199,7 +203,10 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
     clicked = set()  # Создаем сет для клеточек, по которым мы кликнули
     marked = set()  # Set for marked mines
     clear = set()
-    print(mines)
+
+    l1 = Label(root, text="Mines: " + str(len(mines)),
+               font="Arial 16")
+    l1.pack()
 
     root.mainloop()
 
