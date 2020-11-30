@@ -145,6 +145,20 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
     # events
     def click(event):
         ids = c.find_withtag(CURRENT)[0]  # Определяем по какой клетке кликнули
+        if ids in mines and len(clear) == 0:
+            print('first click on mine !')
+            mines.remove(ids)
+            print(str(ids) + ' removed from mines list')
+            print('generating new mine...')
+            while True:
+                new_mine = random.randint(1, grid_height * grid_width + 1)
+                print(str(new_mine) + ' generated, checking...')
+                if new_mine in mines:
+                    continue
+                else:
+                    mines.add(new_mine)
+                    print(str(new_mine) + ' has been added to mines list !')
+                    break
         if ids not in mines:
             print_neighbors(ids)
             x1, y1, x2, y2 = c.coords(ids)
@@ -153,6 +167,7 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
                 messagebox.showwarning(title='Congratulations !', message='You won this game !')
                 root.destroy()
                 return 0
+
         if ids in mines:
             if ids in marked:
                 pass
@@ -205,6 +220,8 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
     clicked = set()  # Создаем сет для клеточек, по которым мы кликнули
     marked = set()  # Set for marked mines
     clear = set()
+
+    print(mines)
 
     l1 = Label(root, text="Mines: " + str(len(mines)),
                font="Arial 16")

@@ -8,7 +8,7 @@ def display():
 
     def easy():
         game.level = 'Easy'
-        game.setup(9, 9, 10)
+        game.setup(4, 4, 2)
 
     def medium():
         game.level = 'Medium'
