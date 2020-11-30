@@ -145,40 +145,41 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
     # events
     def click(event):
         ids = c.find_withtag(CURRENT)[0]  # Определяем по какой клетке кликнули
-        if ids in mines and len(clear) == 0:
-            print('first click on mine !')
-            mines.remove(ids)
-            print(str(ids) + ' removed from mines list')
-            print('generating new mine...')
-            while True:
-                new_mine = random.randint(1, grid_height * grid_width + 1)
-                print(str(new_mine) + ' generated, checking...')
-                if new_mine in mines:
-                    continue
+        if ids not in marked:
+            if ids in mines and len(clear) == 0:
+                print('first click on mine !')
+                mines.remove(ids)
+                print(str(ids) + ' removed from mines list')
+                print('generating new mine...')
+                while True:
+                    new_mine = random.randint(1, grid_height * grid_width + 1)
+                    print(str(new_mine) + ' generated, checking...')
+                    if new_mine in mines:
+                        continue
+                    else:
+                        mines.add(new_mine)
+                        print(str(new_mine) + ' has been added to mines list !')
+                        break
+            if ids not in mines:
+                print_neighbors(ids)
+                x1, y1, x2, y2 = c.coords(ids)
+                clear.add(ids)
+                if check_win():
+                    messagebox.showwarning(title='Congratulations !', message='You won this game !')
+                    root.destroy()
+                    return 0
+
+            if ids in mines:
+                if ids in marked:
+                    pass
                 else:
-                    mines.add(new_mine)
-                    print(str(new_mine) + ' has been added to mines list !')
-                    break
-        if ids not in mines:
-            print_neighbors(ids)
-            x1, y1, x2, y2 = c.coords(ids)
-            clear.add(ids)
-            if check_win():
-                messagebox.showwarning(title='Congratulations !', message='You won this game !')
-                root.destroy()
-                return 0
+                    c.itemconfig(CURRENT, fill="red")  # Если кликнули по клетке с миной - красим ее в красный цвет
+                    gameover()
+                    return 0
 
-        if ids in mines:
-            if ids in marked:
-                pass
-            else:
-                c.itemconfig(CURRENT, fill="red")  # Если кликнули по клетке с миной - красим ее в красный цвет
-                gameover()
-                return 0
-
-        elif ids not in clicked:
-            c.itemconfig(CURRENT, fill="green")  # Иначе красим в зеленый
-        c.update()
+            elif ids not in clicked:
+                c.itemconfig(CURRENT, fill="green")  # Иначе красим в зеленый
+            c.update()
 
     def mark_grid(event):
         ids = c.find_withtag(CURRENT)[0]
