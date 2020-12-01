@@ -14,8 +14,48 @@ def grid(c, grid_height, grid_width, square_size):
 
 
 def setup(grid_height, grid_width, mines_num, square_size=50):
+
+    def close_window():
+
+        def save():
+            print('[ Log ]: starting saving process...')
+            game_time = time.time() - start_time
+            save_file = open("save_"+username+".txt", "w")
+            save_file.write(str(username) + '\n'
+                            + str(level) + '\n'
+                            + str(mines) + '\n'
+                            + str(clear) + '\n'
+                            + str(marked) + '\n'
+                            + str(game_time))
+            save_file.close()
+            print('[ Log ]: save file '+str(save_file.name)+' created successfully!')
+            save_window.destroy()
+
+        def exit():
+            save_window.destroy()
+
+        root.destroy()
+        save_window = Tk()
+        save_window.title("Minesweep Game")
+
+        l1 = Label(save_window, text='Do you want to save this game ?',
+                   font="Arial 16")
+        l1.pack()
+
+        b1 = Button(save_window, text='Save',
+                    width=15, height=3)
+        b1.config(command=save)
+        b1.pack()
+
+        b2 = Button(save_window, text='Exit',
+                    width=15, height=3)
+        b2.config(command=exit)
+        b2.pack()
+
+
     start_time = time.time()
     root = Tk()  # Основное окно программы
+    root.protocol("WM_DELETE_WINDOW", close_window)
     root.title("Minesweep Game")
     c = Canvas(root, width=grid_width * square_size,
                height=grid_height * square_size)  # Задаем область на которой будем рисовать
@@ -147,18 +187,18 @@ def setup(grid_height, grid_width, mines_num, square_size=50):
         ids = c.find_withtag(CURRENT)[0]  # Определяем по какой клетке кликнули
         if ids not in marked:
             if ids in mines and len(clear) == 0:
-                print('first click on mine !')
+                print('[ Log ]: first click on mine detected !')
                 mines.remove(ids)
-                print(str(ids) + ' removed from mines list')
-                print('generating new mine...')
+                print('[ Log ]: mine id = ' + str(ids) + ' removed from mines list')
+                print('[ Log ]: generating new mine...')
                 while True:
                     new_mine = random.randint(1, grid_height * grid_width + 1)
-                    print(str(new_mine) + ' generated, checking...')
+                    print('[ Log ]: mine id = ' + str(new_mine) + ' generated, checking...')
                     if new_mine in mines:
                         continue
                     else:
                         mines.add(new_mine)
-                        print(str(new_mine) + ' has been added to mines list !')
+                        print('[ Log ]: new mine id = ' + str(new_mine) + ' has been added to mines list !')
                         break
             if ids not in mines:
                 print_neighbors(ids)

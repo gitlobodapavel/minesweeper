@@ -2,6 +2,7 @@ from tkinter import *
 import game
 import results as statistic
 import time
+import os.path
 
 
 def display():
@@ -29,7 +30,17 @@ def display():
     def self_results():
         get_self_results()
 
+    def continue_game():
+        print('loading saved game...')
+
     root = Tk()
+
+    if os.path.exists('save_'+str(game.username)+'.txt'):
+        b6 = Button(text='Continue playing',
+                    width=15, height=3)
+        b6.config(command=continue_game)
+        b6.pack()
+
     b1 = Button(text='Easy',
                 width=15, height=3)
     b1.config(command=easy)
